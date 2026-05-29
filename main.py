@@ -40,17 +40,14 @@ hasSatUp = False                    # bool, is the robot already upright
 prevError = 0                       # decimal, Var for Prev. Error for Beacon Derivative Controller
 lightFlashOnTime = 10               # int, Num millisecs for the bricks light to stay on while flashing
 lightFlashOffTime = 90              # int, Num millisecs for the bricks light to stay off while flashing  
+rearMotorLiftedRotVal = 190         # int, the rotational value for the rear motor to be at when the rear wheel is fully lifted
 
-# Write your program here.
-def CalibrateGyro():
-#{
-    ev3.speaker.set_volume(100)
+def FlashTheLightUntilButtonPress(lightColor, button):
     lightIsOn = False
-    ev3.speaker.say("Preparing for gyro calibration. Please place me in my stand and press the center button when ready.")
-    #Flash the light yellow every 0.5 seconds until the center button is pressed.
+    #Flash the light in <lightColor> until <button> is pressed.
     lightFlashTimer.reset()
     ev3.light.off()
-    while Button.CENTER not in ev3.buttons.pressed():
+    while button not in ev3.buttons.pressed():
     #{
         timeVal = lightFlashTimer.time()   #get the current timer val
         #if the light is OFF and has been so for the set amount of time
@@ -58,7 +55,7 @@ def CalibrateGyro():
         #{
             # reset the timer, turn the light ON, and toggle the variable
             lightFlashTimer.reset()
-            ev3.light.on(Color.YELLOW)
+            ev3.light.on(lightColor)
             lightIsOn = True
         #}
 
@@ -71,6 +68,13 @@ def CalibrateGyro():
             lightIsOn = False
         #}
     #}
+
+
+def CalibrateGyro():
+#{
+    ev3.speaker.set_volume(100)
+    ev3.speaker.say("Preparing for gyro calibration. Please place me in my stand and press the center button when ready.")
+    FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
     ev3.speaker.say("Do Not Touch Me Unitl I say I Am Done! Calibrating Gyro in 3...")
     wait(100)
     ev3.speaker.say("2...")
@@ -108,6 +112,19 @@ def CalibrateGyro():
 
     wait(20)
     ev3.speaker.say("Calibration Complete. Thank you for waiting. Please remove me from my stand now and set me on the ground.")
+    wait(500)
 #}
 
+def SitUp():
+#{    
+    ev3.speaker.say("Once I am on the ground, please remove the safety bar from my rear lifting wheels, then press the center button.")
+    FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
+    ev3.speaker.say("Press the center button again to confirm you removed the safety bar. You will damage the motor otherwise.") 
+    FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
+#}
+
+
+
+################### MAIN LOOP ######################
 CalibrateGyro()
+SitUp()
