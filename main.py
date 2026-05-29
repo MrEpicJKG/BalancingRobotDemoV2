@@ -16,10 +16,17 @@ gyroSensor = GyroSensor(Port.S1)
 irSensor = InfraredSensor(Port.S4)
 
 # Init timers
-# singleLoopTimer = StopWatch()
-# controlLoopTimer = StopWatch()
-# fallTimer = StopWatch()
-# actionTimer = StopWatch()
+singleLoopTimer = StopWatch()
+controlLoopTimer = StopWatch()
+fallTimer = StopWatch()
+actionTimer = StopWatch()
+lightFlashTimer = StopWatch()
+
+# Robot Action Def for when in Beacon mode
+BeaconAction = namedtuple('Action', ['driveSpeed', 'steering'])
+
+#Robot Action Def for when in Remote Control Mode (May not impelement. Just a placeholder for now)
+#RCAction = namedtuple('Action', ['leftMotorSpeed', 'rightMotorSpeed'])
 
 # Init Constants                    #Format: <Data Type>, <Desc>
 GYRO_CALIBRATION_LOOP_COUNT = 200   # int, Num of Iterations for Gyro calibration
@@ -28,69 +35,41 @@ TARGET_LOOP_PERIOD = 20             # int, in MS
 REAR_MOTOR_SIT_UP_ROTATIONS = 0.5   # decimal, num of rotations med motor makes to lift the bot until it is straight up
 
 # Init other, non-constant variables
-# ----- Vars relating to Sit-Up          
-# sitUpTime = 800                    # int, duration in MS
-sitUpSpeed = 60                      # int, rear motor rotation speed in Deg / Sec
+sitUpSpeed = 60                     # int, rear motor rotation speed in Deg / Sec
 hasSatUp = False                    # bool, is the robot already upright
-# ------
+prevError = 0                       # decimal, Var for Prev. Error for Beacon Derivative Controller
+lightFlashOnTime = 10               # int, Num millisecs for the bricks light to stay on while flashing
+lightFlashOffTime = 90              # int, Num millisecs for the bricks light to stay off while flashing  
 
-prevError = 0                       # Var for Prev. Error for Beacon Derivative Controller
-# Robot Action Def for when in Beacon mode
-BeaconAction = namedtuple('Action', ['driveSpeed', 'steering'])
-
-#Robot Action Def for when in Remote Control Mode (May not impelement. Just a placeholder for now)
-#RCAction = namedtuple('Action', ['leftMotorSpeed', 'rightMotorSpeed'])
-
-# def InitVars():
-#     # Init other, non-constant variables
-#     # ----- Vars relating to Sit-Up          
-#     #global sitUpTime = 800                     # int, duration in MS
-#     global sitUpSpeed                     # int, rear motor rotation speed in Deg / Sec
-#     global hasSatUp                   # bool, is the robot already upright
-#     sitUpSpeed = 1
-#     hasSatUp = False
-#     # ------
-
-#     global prevError
-#     prevError = 0                       # Var for Prev. Error for Beacon Derivative Controller
-#     # Robot Action Def for when in Beacon mode
-#     global BeaconAction
-#     BeaconAction = namedtuple('Action', ['driveSpeed', 'steering'])
-
-#     #Robot Action Def for when in Remote Control Mode (May not impelement. Just a placeholder for now)
-#     #global RCAction
-#     # RCAction = namedtuple('Action', ['leftMotorSpeed', 'rightMotorSpeed'])
-
-#=====================================================================================
 # Write your program here.
-# def CalibrateGyro():
+def CalibrateGyro():
+#{
+    lightIsOn = False
+    ev3.speaker.say("Preparing for gyro calibration. Please place me in my stand and press the center button when ready.")
+    #Flash the light yellow every 0.5 seconds until the center button is pressed.
+    lightFlashTimer.reset()
+    ev3.light.off()
+    while ev3.Buttons.pressed() != [CENTER]:
+    #{
+        timeVal = lightFlashTimer.time()   #get the current timer val
+        #if the light is OFF and has been so for the set amount of time
+        if lightIsOn == False and timeVal >= lightFlashOffTime:
+        #{
+            # reset the timer, turn the light ON, and toggle the variable
+            lightFlashTimer.reset()
+            ev3.light.on(YELLOW)
+            lightIsOn == True
+        #}
 
+        #if the light is ON and it has been so for the set amount of time
+        elif lightIsOn == True and timeVal >= lightFlashOnTime:
+        #{
+            # reset the timer, turn the light OFF, and toggle the variable
+            lightFlashTimer.reset()
+            ev3.light.off()
+            lightIsOn == False
+        #}
+    #}
 
-
-# def SitUp():
-    # if hasSatUp == False:
-    #     hasSatUp = True
-    #     i = 0
-    #     ev3.speaker.say("Press the center button to confirm the safety beam has been removed.")
-    #     #cycle every 10 iterations turn the light on red if its off or off if it is on, until the center button is pressed.
-    #     while ev3.Buttons.pressed() != [CENTER]:
-    #     #{
-    #         if i < 20 and i != 0 and i != 10 and i != 20:
-    #             i += 1
-    #         elif i == 0:
-    #             ev3.light.off()
-    #             i += 1
-    #         elif i == 10:
-    #             ev3.light.on(RED)
-    #             i += 1
-    #         elif i == 20:
-    #             i = 0
-    #     #}
-
-    # rearMotor.run_target(sitUpSpeed, 0, Stop.HOLD, True) 
-    # rearMotor.run_target(sitUpSpeed, 360 * REAR_MOTOR_SIT_UP_ROTATIONS, Stop.HOLD, True)
-
-                
-#InitVars()
-# SitUp()
-rearMotor.run_target(sitUpSpeed, 360 * REAR_MOTOR_SIT_UP_ROTATIONS, Stop.HOLD, True)
+    
+#}
