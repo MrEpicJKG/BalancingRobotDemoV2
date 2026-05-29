@@ -23,14 +23,14 @@ irSensor = InfraredSensor(Port.S4)
 
 # Init Constants                    #Format: <Data Type>, <Desc>
 GYRO_CALIBRATION_LOOP_COUNT = 200   # int, Num of Iterations for Gyro calibration
-GYRO_OFFSET_FACTOR = 0.0005         # float, Gyro Offset Factor from GyroBoy Project
+GYRO_OFFSET_FACTOR = 0.0005         # decimal, Gyro Offset Factor from GyroBoy Project
 TARGET_LOOP_PERIOD = 20             # int, in MS
-REAR_MOTOR_SIT_UP_ROTATIONS = 1.0# float, num of rotations med motor makes to lift the bot until it is straight up
+REAR_MOTOR_SIT_UP_ROTATIONS = 0.5   # decimal, num of rotations med motor makes to lift the bot until it is straight up
 
 # Init other, non-constant variables
 # ----- Vars relating to Sit-Up          
-# sitUpTime = 800                     # int, duration in MS
-sitUpSpeed = 1                      # int, rear motor rotation speed in Deg / Sec
+# sitUpTime = 800                    # int, duration in MS
+sitUpSpeed = 60                      # int, rear motor rotation speed in Deg / Sec
 hasSatUp = False                    # bool, is the robot already upright
 # ------
 
