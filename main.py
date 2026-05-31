@@ -86,7 +86,6 @@ def FlashTheLightUntilButtonPress(lightColor, button):
         #}
     #}
 
-
 def update_action():
 #{
     # Beacon mode (on channel 1)
@@ -135,7 +134,6 @@ def update_action():
         yield
 #}
 
-
 # Stops both motors
 def stop_motors():
 #{
@@ -143,17 +141,18 @@ def stop_motors():
     right_motor.stop()
 #}
 
-
 def CalibrateGyro():
 #{
     ev3.speaker.set_volume(100)
-    ev3.speaker.say("Preparing for gyro calibration. Please place me in my stand and press the center button when ready.")
+    ev3.speaker.say("Prepping for calibration. Place in stand and press button.") # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    # ev3.speaker.say("Welcome.  Preparing for gyro calibration. Please place me in my stand and press the center button when ready.")
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
-    ev3.speaker.say("Do Not Touch Me Until I say I Am Done! Calibrating Gyro in 3...")
-    wait(50)
-    ev3.speaker.say("2...")
-    wait(50)
-    ev3.speaker.say("1...")
+    ev3.speaker.say("Calibrating gyro") # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    # ev3.speaker.say("Do Not Touch Me Until I say I Am Done! Calibrating Gyro in 3...")
+    # wait(50)
+    # ev3.speaker.say("2...")
+    # wait(50)
+    # ev3.speaker.say("1...")
 
     ######  ACTUAL GYRO CALIBRATION ######
     calibrationTimer.reset()
@@ -206,17 +205,19 @@ def CalibrateGyro():
     ###### END OF ACTUAL GYRO CALIBRATION ######
 
     wait(20)
-    ev3.speaker.say("Calibration Complete. Thank you for waiting. Please remove me from my stand now and set me on the ground.")
+    ev3.speaker.say("Calibration Done")  # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    # ev3.speaker.say("Calibration Complete. Thank you for waiting. Please remove me from my stand now and set me on the ground.")
 #}
-
 
 def SitUp():
 #{   
     rearMotor.reset_angle(0)
     wait(500)
-    ev3.speaker.say("Once I am on the ground, please remove the safety bar from my rear lifting wheel, then press the center button.")
+    ev3.speaker.say("Remove Bar") # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    # ev3.speaker.say("Once I am on the ground, please remove the safety bar from my rear lifting wheel, then press the center button.")
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
-    ev3.speaker.say("Press the center button again to confirm you removed the safety bar. You will damage the motor otherwise.") 
+    ev3.speaker.say("Press Button")  # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    # ev3.speaker.say("Press the center button again to confirm you removed the safety bar. You will damage the motor otherwise.") 
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
     wait(200)
     rearMotor.run_target(sitUpSpeed, -90, Stop.HOLD, True)
@@ -230,6 +231,6 @@ def SitUp():
 
 
 
-################### MAIN LOOP ######################
-# CalibrateGyro()
+################### PRE-MAIN LOOP ######################
+CalibrateGyro()
 SitUp()
