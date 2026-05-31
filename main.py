@@ -46,6 +46,7 @@ Action = namedtuple('BeaconAction', ['driveSpeed', 'steering'])
 GYRO_CALIBRATION_LOOP_COUNT = 200   # int, Num of Iterations for Gyro calibration
 GYRO_OFFSET_FACTOR = 0.0005         # decimal, Gyro Offset Factor from GyroBoy Project
 TARGET_LOOP_PERIOD = 20             # int, in MS
+REAR_MOTOR_SIT_UP_ROTATIONS = 0.5   # decimal, num of rotations med motor makes to lift the bot until it is straight up
 
 # Init other, non-constant variables
 sitUpSpeed = -20                     # int, rear motor rotation speed in Deg / Sec
@@ -53,20 +54,8 @@ hasSatUp = False                    # bool, is the robot already upright
 prevError = 0                       # decimal, Var for Prev. Error for Beacon Derivative Controller
 lightFlashOnTime = 10               # int, Num millisecs for the bricks light to stay on while flashing
 lightFlashOffTime = 90              # int, Num millisecs for the bricks light to stay off while flashing  
-rearMotorLoweredRotVal = -90        # int, the rotational value for when the robot is fully sitting upright
-rearMotorLiftedRotVal = 120         # int, the rotational value for the rear motor to be at when the rear wheel is fully lifted
-rearMtrStartBalanceRetractSpd = 200  # int, the rotation in deg/sec for the rear motor to spin when retracting the rear leg as fast as possible
-
-def CheckBatteryCharged():
-        # Calculate current battery voltage
-        battery_voltage = (ev3.battery.voltage())/1000
-
-        # Battery warning for voltage less than 7.5V and breaks out of the loop
-        if battery_voltage < 7.5:
-            ev3.light.on(Color.ORANGE)
-            return False
-        else:
-            return True
+rearMotorLoweredRotVal = -55        # int, the rotational value for when the robot is fully sitting upright
+rearMotorLiftedRotVal = 190         # int, the rotational value for the rear motor to be at when the rear wheel is fully lifted
 
 
 def FlashTheLightUntilButtonPress(lightColor, button):
@@ -224,31 +213,24 @@ def SitUp():
 #{   
     rearMotor.reset_angle(0)
     wait(500)
-    ev3.speaker.say("Remove Safety Bar") # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    ev3.speaker.say("Remove Bar") # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
     # ev3.speaker.say("Once I am on the ground, please remove the safety bar from my rear lifting wheel, then press the center button.")
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
-    # ev3.speaker.say("Press Button")  # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
+    ev3.speaker.say("Press Button")  # TEMP -- Will be replaced with the commented line below. it is here to shorten troubleshooting time.
     # ev3.speaker.say("Press the center button again to confirm you removed the safety bar. You will damage the motor otherwise.") 
-    # FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
+    FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
     wait(200)
-    rearMotor.run_target(sitUpSpeed, rearMotorLoweredRotVal, Stop.HOLD, True)
+    rearMotor.run_target(sitUpSpeed, -90, Stop.HOLD, True)
+    # rearMotor.run_until_stalled(sitUpSpeed, Stop.COAST)
+    # while rearMotor.angle() > -60 and rearMotor.angle < 200 and gyroSensor.angle() < -10:
+    #     {}
+    # # Do nothing except wait for the motor to spin until the while conditions are met...
+    # rearMotor.stop()  # ... then stop the motor
+
 #}
 
 
-def StartBalance():
-#{
-    rearMotor.run_target(rearMtrStartBalanceRetractSpd, rearMotorLiftedRotVal, Stop.HOLD, False)
-    leftMotor.run_time(-500, 500, Stop.COAST, False)
-    rightMotor.run_time(-500, 500, Stop.COAST, True)
-#}
 
-
-
-################### MAIN CODE SEQUENCE ######################
-if CheckBatteryCharged() == False:
-    ev3.speaker.say("Low Battery Warning. Exiting Program")
-    sys.exit()
-
+################### PRE-MAIN LOOP ######################
 CalibrateGyro()
 SitUp()
-StartBalance()
