@@ -350,7 +350,7 @@ def MainBalanceLoop(gyroOffset):
             rightMotor.dc(outputPower + 0.1 * steering)
             print("GyroVal: " + str(gyroSensorValue) + " | GyroOffset: " + str(gyroOffset) + " | BodyAngle: " + str(robotBodyAngle) + " | BodyRate: " + str(robotBodyRate) + " | WheelRate: " + str(wheelRate))
             print("WheelAngle: " + str(wheelAngle) + " | LeftAngle: " + str(leftMotorAngle) + " | RightAngle: " + str(rightMotorAngle))
-            print("OutputPower: " + str(outputPower) + " | DriveSpeed: " + str(driveSpeed) + " | Steer: " + str(steering) + " | Lspd: " + str(leftMotor.speed()) + " | Rspd: " + str(rightMotor.speed()))
+            print("OutputPower: " + str(outputPower) + " | DriveSpeed: " + str(driveSpeed) + " | Steer: " + str(steering) + " | LeftSpd: " + str(leftMotor.speed()) + " | RightSpd: " + str(rightMotor.speed()))
             print("----------------------------------------------")
 
             # Check if robot fell down. If the output speed is +/-100% for more than one second, 
