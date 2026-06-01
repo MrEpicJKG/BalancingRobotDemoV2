@@ -75,7 +75,7 @@ def CheckBatteryCharged():
         print("Reached ===== BATTERY - END 1 =====") # <<<<<<<<<<<<<<<<<<<<<<<
         return False
     else:
-        print("Reached ===== BATTERY - END 2 =====") # <<<<<<<<<<<<<<<<<<<<<<<
+        print("Reached ===== BATTERY - END  2 =====") # <<<<<<<<<<<<<<<<<<<<<<<
         return True
 #}
 
@@ -91,12 +91,12 @@ def FlashTheLightUntilButtonPress(lightColor, button):
     print("Reached === FLASH - MID 1 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     while button not in ev3.buttons.pressed():
     #{
-        print("Reached === FLASH - MID 2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+        print("Reached === FLASH - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
         timeVal = lightFlashTimer.time()   #get the current timer val
         #if the light is OFF and has been so for the set amount of time
         if lightIsOn == False and timeVal >= lightFlashOffTime:
         #{
-            print("Reached === FLASH - MID 3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === FLASH - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             # reset the timer, turn the light ON, and toggle the variable
             lightFlashTimer.reset()
             ev3.light.on(lightColor)
@@ -106,7 +106,7 @@ def FlashTheLightUntilButtonPress(lightColor, button):
         #if the light is ON and it has been so for the set amount of time
         elif lightIsOn == True and timeVal >= lightFlashOnTime:
         #{
-            print("Reached === FLASH - MID 4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === FLASH - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             # reset the timer, turn the light OFF, and toggle the variable
             lightFlashTimer.reset()
             ev3.light.off()
@@ -138,7 +138,7 @@ def UpdateAction():
     # than 10 degrees
     if relativeDistance is not None:
     #{
-        print("Reached === ACTION - MID 2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+        print("Reached === ACTION - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
         angleError = 0 - angle
         K_angle = 4 # controller gain
         steering = K_angle * angleError
@@ -149,7 +149,7 @@ def UpdateAction():
         # if the angle between the infrared sensor and beacon is less than 10 degrees, the segway translates towards the beacon
         if abs(angleError) < 10:
         #{
-            print("Reached === ACTION - MID 3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === ACTION - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             error = 100 - relativeDistance
             dError = (error - prevError)/actionTimer.time()
             K_p = 6
@@ -160,14 +160,14 @@ def UpdateAction():
             prevError = error
                 
             if relativeDistance > 10:
-                print("Reached ===== ACTION - END 2 =====") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached ===== ACTION - END  2 =====") # <<<<<<<<<<<<<<<<<<<<<<<
                 yield action
             else:
-                print("Reached ===== ACTION - END 3 =====") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached ===== ACTION - END   3 =====") # <<<<<<<<<<<<<<<<<<<<<<<
                 yield STOP
         #}
     else:
-        print("Reached ===== ACTION - END 4 =====") # <<<<<<<<<<<<<<<<<<<<<<<
+        print("Reached ===== ACTION - END    4 =====") # <<<<<<<<<<<<<<<<<<<<<<<
         yield
 #}
 
@@ -207,25 +207,25 @@ def CalibrateGyro():
     # calibrationTimer.resume()
     while True:
     #{
-        print("Reached === CALIBRATE - MID 2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+        print("Reached === CALIBRATE - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
         # Track the change in the Gyro value over time to get an offset value that can
         # be used to account for gyro drift later
         gyroMinRate = 440   # default to the max value, so we can go down from there
         gyroMaxRate = -440   # default to the min value, so we can go up from there
         gyroSum = 0
         for _ in range(GYRO_CALIBRATION_LOOP_COUNT):
-            print("Reached === CALIBRATE - MID 3 ===") # <<<<<<<<<<<<<<<<<<<<<<< 
+            print("Reached === CALIBRATE - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<< 
             gyroSensorValue = gyroSensor.speed()
             gyroSum += gyroSensorValue
             if gyroSensorValue > gyroMaxRate:
-                print("Reached === CALIBRATE - MID 4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === CALIBRATE - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 gyroMaxRate = gyroSensorValue
             if gyroSensorValue < gyroMinRate:
-                print("Reached === CALIBRATE - MID 5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === CALIBRATE - MID     5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 gyroMinRate = gyroSensorValue
             wait(5)
         if gyroMaxRate - gyroMinRate < 2: 
-            print("Reached === CALIBRATE - MID 6 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === CALIBRATE - MID      6 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             break
     gyroOffset = gyroSum / GYRO_CALIBRATION_LOOP_COUNT
         # lastGyroAngle = 100000  # used to calculate gyro speed via difference ovewr time, since we can only use speed or angle. default to impossible value
@@ -327,7 +327,7 @@ def MainBalanceLoop(gyroOffset):
             # This calculates the average control loop period. This is used in the control feedback 
             # calculation instead of the single loop time to filter out random fluctuations.
             if controlLoopCounter == 0:
-                print("Reached === BALANCE - MID 2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === BALANCE - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 # The first time through the loop, we need to assign a value to
                 # avoid dividing by zero later.
 
@@ -335,11 +335,11 @@ def MainBalanceLoop(gyroOffset):
                 averageControlLoopPeriod = TARGET_LOOP_PERIOD / 1000
                 controlLoopTimer.reset()
             else:
-                print("Reached === BALANCE - MID 3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === BALANCE - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 averageControlLoopPeriod = (controlLoopTimer.time() / 1000 / controlLoopCounter)
             controlLoopCounter += 1
 
-            print("Reached === BALANCE - MID 4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             # Calculate robot body angle and rate (or speed)
             gyroSensorValue = gyroSensor.speed()
             gyroOffset *= (1 - GYRO_OFFSET_FACTOR)
@@ -350,7 +350,7 @@ def MainBalanceLoop(gyroOffset):
             # Motor angle values
             leftMotorAngle = leftMotor.angle()
             rightMotorAngle = rightMotor.angle()
-            print("Reached === BALANCE - MID 5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID     5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
 
             # Calculate wheel angle and rate, the wheel rate is calculated using a moving average on 4 item motorPositionChange list
             previousMotorSum = motorPositionSum
@@ -360,7 +360,7 @@ def MainBalanceLoop(gyroOffset):
             del motorPositionChange[-1]
             wheelAngle += change - driveSpeed * averageControlLoopPeriod
             wheelRate = sum(motorPositionChange) / 4 / averageControlLoopPeriod
-            print("Reached === BALANCE - MID 6 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID      6 ===") # <<<<<<<<<<<<<<<<<<<<<<<
 
             # This is the main control feedback calculation
             outputPower = (-0.01 * driveSpeed) + (1.2 * robotBodyRate +
@@ -373,7 +373,7 @@ def MainBalanceLoop(gyroOffset):
                 outputPower = 100
             if outputPower < -100:
                 outputPower = -100
-            print("Reached === BALANCE - MID 7 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID       7 ===") # <<<<<<<<<<<<<<<<<<<<<<<
 
             # Drive motors
             leftMotor.dc(outputPower - 0.1 * steering)
@@ -383,40 +383,39 @@ def MainBalanceLoop(gyroOffset):
             # we know that we are no longer balancing properly.
             if abs(outputPower) < 100:
                 fallTimer.reset()
-                print("Reached === BALANCE - MID 8 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === BALANCE - MID        8 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             elif fallTimer.time() > 1000:
-                print("Reached === BALANCE - MID 9 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === BALANCE - MID         9 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 break
 
             # This runs update_action() until the next "yield" statement
-            print("Reached === BALANCE - MID 10 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID          10 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             action = next(actionTask)
             if action is not None:
-                print("Reached === BALANCE - MID 11 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+                print("Reached === BALANCE - MID           11 ===") # <<<<<<<<<<<<<<<<<<<<<<<
                 driveSpeed, steering = action
 
             # Make sure loop time is at least TARGET_LOOP_PERIOD. The output power calculation 
             # above depends on having a certain amount of time in each loop.
-            print("Reached === BALANCE - MID 12 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            print("Reached === BALANCE - MID            12 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             wait(TARGET_LOOP_PERIOD - singleLoopTimer.time())
         except KeyboardInterrupt:
             StopMotors()
-            print("Reached ===== BALANCE - MID 13 - END OF WHILE - KeyboardInterrupt =====")
+            print("Reached ===== BALANCE - MID             13 - END OF WHILE - KeyboardInterrupt =====")
             break
 
-    print("Reached === BALANCE - MID 14 - NORMAL END OF WHILE ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached === BALANCE - MID              14 - NORMAL END OF WHILE ===") # <<<<<<<<<<<<<<<<<<<<<<<
     # Handle falling over. If we get to this point in this program, it means
     # that the robot fell over.
 
     # Stop all motors
-    print("Reached === BALANCE - MID 15 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     StopMotors()
     print("###### SPEAK: fallen over")
     ev3.speaker.say("I think I have fallen over. Please pick me up and place me back on my stand c" +
     "Then press the center button to try again.")
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
     shouldRestart = True
-    print("Reached ===== BALANCE - END 2 =====") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached ===== BALANCE - END =====") # <<<<<<<<<<<<<<<<<<<<<<<
 #}
 
 def MainSequence():
@@ -428,17 +427,23 @@ def MainSequence():
         sys.exit()
     print("Reached === MAIN - MID 1 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     offsetVal = CalibrateGyro()
-    print("Reached === MAIN - MID 2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached === MAIN - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     SitUp()
-    print("Reached === MAIN - MID 3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached === MAIN - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     StartBalance()
-    print("Reached === MAIN - MID 4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached === MAIN - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     MainBalanceLoop(offsetVal)
-    print("Reached === MAIN - MID 5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    print("Reached === MAIN - MID     5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     if shouldRestart == True:
         print("Reached === MAIN - END ===") # <<<<<<<<<<<<<<<<<<<<<<<
         MainLoop()  # Recursion FTW!!!
 
 
 #################################################################
-MainSequence()
+try:
+    MainSequence()
+finally: # This runs on any exit, no matter what triggered it. used to reset motors to initial positions
+    leftMotor.run_target(50, 0, Stop.HOLD, False)
+    rightMotor.run_target(50, 0, Stop.HOLD, False)
+    rearMotor.run_target(50, 0, Stop.HOLD, True)
+    print("########## PROGRAM EXITED GRACEFULLY")
