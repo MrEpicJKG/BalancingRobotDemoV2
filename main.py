@@ -393,7 +393,7 @@ def MainBalanceLoop(gyroOffset):
     # Stop all motors
     StopMotors()
     print("###### SPEAK: fallen over")
-    ev3.speaker.say("I think I have fallen over. Please pick me up and place me back on my stand c" +
+    ev3.speaker.say("I think I have fallen over. Please pick me up and place me back on my stand" +
     "Then press the center button to try again.")
     FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER)
     shouldRestart = True
