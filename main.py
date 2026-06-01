@@ -88,15 +88,14 @@ def FlashTheLightUntilButtonPress(lightColor, button):
     lightFlashTimer.reset()
     lightFlashTimer.resume()
     ev3.light.off()
-    print("Reached === FLASH - MID 1 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+    # print("Reached === FLASH - MID 1 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     while button not in ev3.buttons.pressed():
     #{
-        print("Reached === FLASH - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
         timeVal = lightFlashTimer.time()   #get the current timer val
         #if the light is OFF and has been so for the set amount of time
         if lightIsOn == False and timeVal >= lightFlashOffTime:
         #{
-            print("Reached === FLASH - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            # print("Reached === FLASH - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             # reset the timer, turn the light ON, and toggle the variable
             lightFlashTimer.reset()
             ev3.light.on(lightColor)
@@ -106,7 +105,7 @@ def FlashTheLightUntilButtonPress(lightColor, button):
         #if the light is ON and it has been so for the set amount of time
         elif lightIsOn == True and timeVal >= lightFlashOnTime:
         #{
-            print("Reached === FLASH - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
+            # print("Reached === FLASH - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             # reset the timer, turn the light OFF, and toggle the variable
             lightFlashTimer.reset()
             ev3.light.off()
@@ -205,8 +204,10 @@ def CalibrateGyro():
     ######  ACTUAL GYRO CALIBRATION ######
     # calibrationTimer.reset()
     # calibrationTimer.resume()
+    iters = 0
     while True:
     #{
+        iters += 1
         print("Reached === CALIBRATE - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
         # Track the change in the Gyro value over time to get an offset value that can
         # be used to account for gyro drift later
@@ -227,6 +228,9 @@ def CalibrateGyro():
         if gyroMaxRate - gyroMinRate < 2: 
             print("Reached === CALIBRATE - MID      6 ===") # <<<<<<<<<<<<<<<<<<<<<<<
             break
+        if iters >= 5:
+            ev3.speaker.say("Unable to calibrate gyro. Area is to unstable. Please move to a more stable area and try again. Exiting Program.")
+            sys.exit()
     gyroOffset = gyroSum / GYRO_CALIBRATION_LOOP_COUNT
         # lastGyroAngle = 100000  # used to calculate gyro speed via difference ovewr time, since we can only use speed or angle. default to impossible value
         # lastTime = calibrationTimer.time()
@@ -438,12 +442,5 @@ def MainSequence():
         print("Reached === MAIN - END ===") # <<<<<<<<<<<<<<<<<<<<<<<
         MainLoop()  # Recursion FTW!!!
 
-
 #################################################################
-try:
-    MainSequence()
-finally: # This runs on any exit, no matter what triggered it. used to reset motors to initial positions
-    leftMotor.run_target(50, 0, Stop.HOLD, False)
-    rightMotor.run_target(50, 0, Stop.HOLD, False)
-    rearMotor.run_target(50, 0, Stop.HOLD, True)
-    print("########## PROGRAM EXITED GRACEFULLY")
+MainSequence()
