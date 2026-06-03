@@ -13,7 +13,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 ev3 = EV3Brick()
 rightMotor = Motor(Port.A)
 leftMotor = Motor(Port.D)
-rearMotor = Motor(Port.B)
+rearMotor = Motor(Port.B, Direction.CLOCKWISE, [8,24])
 gyroSensor = GyroSensor(Port.S1)
 irSensor = InfraredSensor(Port.S4)
 
@@ -30,7 +30,7 @@ lightFlashTimer = StopWatch()
 BeaconAction = namedtuple('BeaconAction', ['driveSpeed', 'steering'])
 
 #Robot Action Def for when in Remote Control Mode (May not impelement. Just a placeholder for now)
-#Action = namedtuple('RCAction', ['leftMotorSpeed', 'rightMotorSpeed'])
+#RCAction = namedtuple('RCAction', ['leftMotorSpeed', 'rightMotorSpeed'])
 
 # Init Constants                    #Format: <Data Type>, <Desc>
 GYRO_CALIBRATION_LOOP_COUNT = 200   # int, Num of Iterations for Gyro calibration
@@ -236,6 +236,7 @@ def CalibrateGyro():
     # ev3.speaker.say("Calibration Complete. Thank you for waiting. Please remove me from my stand now and set me on the ground.")
     print(">>>>>>>>>> GyroOffset: " + str(gyroOffset))
     # print("Reached ===== CALIBRATE - END =====") # <<<<<<<<<<<<<<<<<<<<<<<
+    FlashTheLightUntilButtonPress(Color.YELLOW, Button.CENTER) # TEMP -- Only here to give me a chance to remove the robot from the stand
     return gyroOffset
 #}
 
@@ -272,9 +273,7 @@ def MainBalanceLoop(gyroOffset):
     rightMotor.reset_angle(0)
     fallTimer.reset()
     controlLoopTimer.reset()
-    controlLoopTimer.resume()
     actionTimer.reset()
-    actionTimer.resume()
     motorPositionSum = 0
     wheelAngle = 0
     motorPositionChange = [0, 0, 0, 0]
@@ -410,9 +409,9 @@ def MainSequence():
     # print("Reached === MAIN - MID 1 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     offsetVal = CalibrateGyro()
     # print("Reached === MAIN - MID  2 ===") # <<<<<<<<<<<<<<<<<<<<<<<
-    SitUp()
+    # SitUp()
     # print("Reached === MAIN - MID   3 ===") # <<<<<<<<<<<<<<<<<<<<<<<
-    StartBalance()
+    # StartBalance()
     # print("Reached === MAIN - MID    4 ===") # <<<<<<<<<<<<<<<<<<<<<<<
     MainBalanceLoop(offsetVal)
     # print("Reached === MAIN - MID     5 ===") # <<<<<<<<<<<<<<<<<<<<<<<
@@ -420,7 +419,7 @@ def MainSequence():
         # print("Reached === MAIN - END ===") # <<<<<<<<<<<<<<<<<<<<<<<
         # The Recursion below is taking the place of the while loop that is 
         # in the original segway code near line 127 right after the stop_motors() function
-        MainLoop()  # Recursion FTW!!!
+        MainSequence()  # Recursion FTW!!!
 
 #################################################################
 MainSequence()
